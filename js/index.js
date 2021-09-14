@@ -90,10 +90,18 @@ function presentabsentmark() {
     var totalstudents = data['totalstudent'];
     studentdata[0][2] = "Status";
     for (i = 1; i < totalstudents + 1; i++) {
-        if ($(`#${studentdata[i][1]}`).is(':checked')) {
-            studentdata[i][2] = "Present";
-        } else {
-            studentdata[i][2] = "Absent";
+        if (option == "Mark Presence") {
+            if ($(`#${studentdata[i][1]}`).is(':checked')) {
+                studentdata[i][2] = "Present";
+            } else {
+                studentdata[i][2] = "Absent";
+            }
+        }else{
+            if ($(`#${studentdata[i][1]}`).is(':checked')) {
+                studentdata[i][2] = "Absent";
+            } else {
+                studentdata[i][2] = "Present";
+            }
         }
     }
     return studentdata;
@@ -153,8 +161,8 @@ function downloadattendence() {
     pom.click();
 }
 
-function addsubjects() {    
-    var temp='';
+function addsubjects() {
+    var temp = '';
     temp += `<input type="text" placeholder="Subject Name" id="subname">`;
     temp += `<input type="text" placeholder="Subject Code" id="subcode">`;
     temp += `<button type="button" class="btn btn-success" onclick="savesubject();">Add</button>`;
@@ -162,19 +170,27 @@ function addsubjects() {
 }
 function savesubject() {
     var data = JSON.parse(localStorage.getItem('subjects'));
-    if(data==null){
-        data=[];
+    if (data == null) {
+        data = [];
     }
     data.push([document.getElementById("subname").value, document.getElementById('subcode').value]);
     localStorage.setItem('subjects', JSON.stringify(data));
     displaysubjects();
 }
-function displaysubjects() {    
+function displaysubjects() {
     var data = JSON.parse(localStorage.getItem('subjects'));
-    var temp='';
-    for(i=0;i<data.length;i++){
-        temp+=`<button type="button" class="btn btn-primary" onclick="checkClass('${data[i][0]}','${data[i][1]}');">${data[i][0]} ${data[i][1]}</button><br>`;
+    var temp = '';
+    for (i = 0; i < data.length; i++) {
+        temp += `<button type="button" class="btn btn-primary" onclick="checkClass('${data[i][0]}','${data[i][1]}');">${data[i][0]} ${data[i][1]}</button><br>`;
     }
-    document.getElementById("subjectsshow").innerHTML=temp;
+    document.getElementById("subjectsshow").innerHTML = temp;
 }
 displaysubjects();
+var option = "Mark Presence";
+function presentorabsent(op) {
+    if (op == "Mark Absentee") {
+        option = "Mark Absentee";
+    } else {
+        option = "Mark Presence";
+    }
+}
