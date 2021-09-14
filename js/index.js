@@ -68,9 +68,6 @@ function viewrecentlysaved(){
     var data=JSON.parse(localStorage.getItem('studentdata'));
     displaydatafield(data);
 }
-function markattendence(id){
-    console.log($(`#${id}`).is(':checked')) ;
-}
 
 function loadstudentdata(){
     var data=loaddatafromlocalstorage();
@@ -80,8 +77,29 @@ function loadstudentdata(){
     var temp=`Total Students : ${totalstudents}<br> `;
     for(i=1;i<totalstudents+1;i++){
         temp+=`<label for="${studentdata[i][1]}">${studentdata[i][0]}</label>
-                <input type="checkbox" id="${studentdata[i][1]}" onclick="markattendence(this.id)"><br>`;
+                <input type="checkbox" id="${studentdata[i][1]}"><br>`;
     }
+    temp+=`<button type="button" class="btn btn-primary" onclick=presentabsentmark();>Mark Attendence</button>`
     fields.innerHTML=temp;
 }
 loadstudentdata();
+
+function presentabsentmark(){
+    var data=loaddatafromlocalstorage();
+    var studentdata=JSON.parse(data['studentdata']);
+    var totalstudents=data['totalstudent'];
+    var fields=document.getElementById('data');
+    studentdata[0][2]="Status";
+    for(i=1;i<totalstudents+1;i++){
+        if($(`#${studentdata[i][1]}`).is(':checked')){
+            studentdata[i][2]="Present";
+        }else{
+            studentdata[i][2]="Absent";
+        }
+    }
+    console.log(studentdata);
+}
+
+function downloadattendence(){
+    $.csv.fromArrays(arrays);
+}
