@@ -59,7 +59,7 @@ function displaydatafield(csvdata) {
     }
     temp += "</table>";
 
-    temp += `<button type="button" class="btn btn-success" onclick="savetolocalstorage();">Save</button>`;
+    temp += `<button type="button" class="btn btn-success" onclick="savetolocalstorage();">Save</button><br>`;
 
     console.log(len - 2);
     fields.innerHTML = temp;
@@ -87,7 +87,7 @@ loadstudentdata();
 function presentabsentmark() {
     var data = loaddatafromlocalstorage();
     var studentdata = JSON.parse(data['studentdata']);
-    var totalstudents = data['totalstudent'];    
+    var totalstudents = data['totalstudent'];
     studentdata[0][2] = "Status";
     for (i = 1; i < totalstudents + 1; i++) {
         if ($(`#${studentdata[i][1]}`).is(':checked')) {
@@ -128,19 +128,19 @@ function getMonthName(index) {
 }
 var subject;
 var subjectcode;
-function checkClass(name, code){
-    subject=name;
-    subjectcode=code;
+function checkClass(name, code) {
+    subject = name;
+    subjectcode = code;
 }
 function filename() {
     var today = new Date();
     var date = `${today.getDate()} ${getMonthName((today.getMonth() + 1))},${today.getFullYear()}`
-   
+
     var time = today.toLocaleString('en-US', {
         hour: 'numeric',
         minute: 'numeric',
         hour12: true
-      })      
+    })
     return (`${subject} | ${subjectcode} | ${date} | ${time}`);
 }
 function downloadattendence() {
@@ -149,6 +149,32 @@ function downloadattendence() {
     var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     var url = URL.createObjectURL(blob);
     pom.href = url;
-    pom.setAttribute('download', filename()+'.csv');
+    pom.setAttribute('download', filename() + '.csv');
     pom.click();
 }
+
+function addsubjects() {    
+    var temp='';
+    temp += `<input type="text" placeholder="Subject Name" id="subname">`;
+    temp += `<input type="text" placeholder="Subject Code" id="subcode">`;
+    temp += `<button type="button" class="btn btn-success" onclick="savesubject();">Add</button>`;
+    document.getElementById('subjectsdata').innerHTML = temp;
+}
+function savesubject() {
+    var data = JSON.parse(localStorage.getItem('subjects'));
+    if(data==null){
+        data=[];
+    }
+    data.push([document.getElementById("subname").value, document.getElementById('subcode').value]);
+    localStorage.setItem('subjects', JSON.stringify(data));
+    displaysubjects();
+}
+function displaysubjects() {    
+    var data = JSON.parse(localStorage.getItem('subjects'));
+    var temp='';
+    for(i=0;i<data.length;i++){
+        temp+=`<button type="button" class="btn btn-primary" onclick="checkClass('${data[i][0]}','${data[i][1]}');">${data[i][0]} ${data[i][1]}</button><br>`;
+    }
+    document.getElementById("subjectsshow").innerHTML=temp;
+}
+displaysubjects();

@@ -15,10 +15,14 @@
         <input type="file" id='csvfile'  oninput="readcsv(this);" accept=".csv">
         <button type="button" class="btn btn-success" onclick="viewrecentlysaved();">View Recently Saved</button>
         <button type="button" class="btn btn-danger" onclick="cleardata();">Clear Data</button>        
-        <div id="adddata">
+        <hr>
+        <button type="button" class="btn btn-danger" onclick="addsubjects();">Add Subjects</button>        
+        <div id="subjectsdata">
 
         </div>
+   
         <div id="fields"></div>
+
     </div>
     
     <script src="js/jquery.min.js"></script>
