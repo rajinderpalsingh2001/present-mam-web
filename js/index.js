@@ -79,7 +79,7 @@ function loadstudentdata(){
         temp+=`<label for="${studentdata[i][1]}">${studentdata[i][0]}</label>
                 <input type="checkbox" id="${studentdata[i][1]}"><br>`;
     }
-    temp+=`<button type="button" class="btn btn-primary" onclick=presentabsentmark();>Mark Attendence</button>`
+    temp+=`<button type="button" class="btn btn-primary" onclick=downloadattendence();>Mark Attendence</button>`
     fields.innerHTML=temp;
 }
 loadstudentdata();
@@ -97,9 +97,15 @@ function presentabsentmark(){
             studentdata[i][2]="Absent";
         }
     }
-    console.log(studentdata);
+    return studentdata;
 }
 
 function downloadattendence(){
-    $.csv.fromArrays(arrays);
+    var csvContent = $.csv.fromArrays(presentabsentmark());
+    var pom = document.createElement('a');
+    var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    pom.href = url;
+    pom.setAttribute('download', 'today.csv');
+    pom.click();
 }
