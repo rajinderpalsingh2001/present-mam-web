@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Present Mam : Settings</title>
+</head>
+<body>
+    <div class="container">
+        <input type="file" id='csvfile'  oninput="readcsv(this);" accept=".csv">
+        <button type="button" class="btn btn-success" onclick="viewrecentlysaved();">View Recently Saved</button>
+        <button type="button" class="btn btn-danger" onclick="cleardata();">Clear Data</button>        
+        <div id="adddata">
+
+        </div>
+        <div id="fields"></div>
+    </div>
+    
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.csv.min.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+:root{
+    --appdark: #161616ef;
+    --apptext:whitesmoke;
+}
+body{
+    background-color: var(--appdark);
+    color: var(--apptext);
+}
