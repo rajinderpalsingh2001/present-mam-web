@@ -107,6 +107,22 @@ function addclasstome(id) {
     }
     showtotalpresentabsentchanges();
 }
+function checkbeforesaveattendence(totalstudents) {
+    var data = `<div style="display: flex; justify-content: space-evenly; padding-top: 1rem; padding-bottom: 1rem;">
+    <span class="mdl-chip">
+        <span class="mdl-chip__text" id="presentshow">Present : ${totalpresent}</span>
+    </span>
+    <span class="mdl-chip">
+        <span class="mdl-chip__text" id="totalshow">Total : ${totalstudents}</span>
+    </span>
+    <span class="mdl-chip">
+        <span class="mdl-chip__text" id="absentshow">Absent : ${totalabsent}</span>
+    </span>
+</div>`
+    document.getElementById('finalattendencedialogdata').innerHTML = data;
+    document.getElementById('finalattendencedialog').showModal();
+}
+
 var totalpresent = 0;
 var totalabsent = 0;
 function loadstudentdata() {
@@ -142,7 +158,7 @@ function loadstudentdata() {
                 <input type="checkbox" style="display:none;" id="${studentdata[i][1]}" onchange="addclasstome(this.id)"><br>`;
         }
         temp += `<button type="button"
-    class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored markattendencebtn" onclick="downloadattendence();">
+    class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored markattendencebtn" onclick="checkbeforesaveattendence('${totalstudents}');">
     <i class="material-icons">done</i>
 </button>`;
 
@@ -154,6 +170,7 @@ Change Subject
     }
     fields.innerHTML = temp;
 }
+
 
 function presentabsentmark() {
     var data = loaddatafromlocalstorage();

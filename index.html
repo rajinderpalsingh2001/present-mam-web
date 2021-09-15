@@ -65,7 +65,7 @@ mdl-layout--fixed-tabs">
             </div>
             <!-- Tabs -->
             <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-                <a href="#home" class="mdl-layout__tab is-active">Home</a>
+                <a href="#home" class="mdl-layout__tab is-active" onclick="displaysubjects();">Home</a>
                 <a href="#viewdata" class="mdl-layout__tab" onclick="viewrecentlysaved();">View Students</a>
                 <a href="#settings" id="settingsbtn" class="mdl-layout__tab">Settings</a>
             </div>
@@ -99,6 +99,25 @@ mdl-layout--fixed-tabs">
                     </button>
 
                     <button type="button" class="mdl-button " onclick="cleardata();">Delete</button>
+
+                </div>
+            </dialog>
+
+            <dialog id="finalattendencedialog" class="mdl-dialog">
+                <h3 class="mdl-dialog__title">Final!</h3>
+                <div class="mdl-dialog__content">
+                    <p id="finalattendencedialogdata">
+                    
+                    </p>
+                </div>
+                <div class="mdl-dialog__actions">
+
+                    <button class="mdl-button mdl-js-button" type="button"
+                        onclick="document.getElementById('finalattendencedialog').close();">
+                        Cancel
+                    </button>
+
+                    <button type="button" class="mdl-button " onclick="downloadattendence();document.getElementById('finalattendencedialog').close();">Download</button>
 
                 </div>
             </dialog>
