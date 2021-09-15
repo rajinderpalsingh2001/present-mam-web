@@ -125,17 +125,26 @@ function checkbeforesaveattendence(totalstudents) {
 
 var totalpresent = 0;
 var totalabsent = 0;
-function loadstudentdata() {
-    var data = loaddatafromlocalstorage();
+function loadstudentdata(data) {
     var studentdata = JSON.parse(data['studentdata']);
+    var previousdata = JSON.parse(localStorage.getItem('previousattendence'));
+    var temp = "";
     if (studentdata != null) {
+        var temp2='';
+        if (previousdata != null) {
+            var temp2 = `
+            <button type="button" onclick="loadfrompreviousattendence();" class="mdl-button mdl-js-button mdl-button--accent markpreviousbtn">
+            <i class="material-icons">restore</i>
+            </button>`
+        }
         var totalstudents = totalabsent = data['totalstudent'];
         var fields = document.getElementById('data');
-        var temp = `<span class="subjectheading">${subject} ${subjectcode}</span>`
+        temp += `<span class="subjectheading">${subject} ${subjectcode}</span>`
         temp += `<div style="justify-content: space-evenly; display: flex;">
     <button type="button"
         class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
         onclick="presentorabsent('Mark Present');" id="mb2">Mark Present</button>
+        ${temp2}
     <button type="button" class="mdl-button mdl-js-button mdl-button--raised"
         onclick="presentorabsent('Mark Absent');" id="mb1">Mark Absent</button>
 
@@ -191,9 +200,34 @@ function presentabsentmark() {
                 studentdata[i][2] = "Present";
             }
         }
+
     }
+    localStorage.setItem('previousattendence', JSON.stringify(studentdata));
     return studentdata;
 }
+function loadfrompreviousattendence() {
+    var data = JSON.parse(localStorage.getItem('previousattendence'));    
+    var len = data.length;
+    if (option == "Mark Absent") {
+        for (var i = 0; i < len; i++) {
+            if (data[i][2] == "Absent") {
+                $(`#${data[i][1]}label`).addClass("pinkme");
+                document.getElementById(data[i][1]).checked = true;
+            }
+
+
+        }
+    } else {
+        for (var i = 0; i < len; i++) {
+            if (data[i][2] == "Present") {
+                $(`#${data[i][1]}label`).addClass("pinkme");
+                document.getElementById(data[i][1]).checked = true;
+            }
+        }
+    }
+
+}
+
 function getMonthName(index) {
     switch (index) {
         case 1:
@@ -235,6 +269,9 @@ function checkClass(name, code) {
             document.getElementById(`${i[1]}`).className = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect";
         }
     }
+}
+function calculatepresentabsent(data, len){
+    return [present, absent];
 }
 function filename() {
     var today = new Date();
@@ -316,22 +353,26 @@ function checktoloadstudentdata() {
     if (subject == null) {
         showtoast("Select Subject");
     } else {
-        loadstudentdata();
+        loadstudentdata(loaddatafromlocalstorage());
     }
 }
 var option = "Mark Present";
 function presentorabsent(op) {
     if (op == "Mark Absent") {
         option = "Mark Absent";
-        document.getElementById('mb1').className = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent";
+        
+        document.getElementById('mb1').disabled=true;
+        document.getElementById('mb2').disabled=false;
         document.getElementById('mb2').className = "mdl-button mdl-js-button mdl-button--raised";
+
         var temp = totalabsent;
         totalabsent = totalpresent;
         totalpresent = temp;
     } else {
-        option = "Mark Present";
-        document.getElementById('mb2').className = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent";
+        option = "Mark Present";        
         document.getElementById('mb1').className = "mdl-button mdl-js-button mdl-button--raised";
+        document.getElementById('mb1').disabled=false;
+        document.getElementById('mb2').disabled=true;
         var temp = totalabsent;
         totalabsent = totalpresent;
         totalpresent = temp;
