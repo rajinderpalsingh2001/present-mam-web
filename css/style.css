@@ -46,3 +46,11 @@ body{
     bottom: 20px;
     right: 20px;
 }
+.subjectheading{
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: inline-block;
+}
+.mdl-data-table td, .mdl-data-table th{
+    text-align: left;
+}

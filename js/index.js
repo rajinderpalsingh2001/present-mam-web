@@ -5,7 +5,7 @@ function readcsv(input) {
     if (extension != 'csv') {
         alert("Only CSV files are compatible");
         input.value = '';
-        document.getElementById('fields').innerHTML = '';
+        document.getElementById('data2nd').innerHTML = '';
     } else {
         var file = input.files[0];
         var reader = new FileReader();
@@ -14,7 +14,7 @@ function readcsv(input) {
 
         reader.onload = function () {
             csvdata = $.csv.toArrays(reader.result)
-            displaydatafield(csvdata);
+            displaydatafield(csvdata,true);
             // studentdata=$.csv.toObjects(reader.result);
             studentdata = csvdata;
         };
@@ -26,7 +26,7 @@ function readcsv(input) {
 }
 function cleardata() {
     localStorage.clear();
-    document.getElementById('fields').innerHTML = "";
+    document.getElementById('data2nd').innerHTML = "";
 }
 function loaddatafromlocalstorage() {
     var data = localStorage.getItem('studentdata');
@@ -38,11 +38,11 @@ function savetolocalstorage() {
     localStorage.setItem('studentdata', JSON.stringify(studentdata));
     localStorage.setItem('totalstudents', studentdata.length);
     alert("Saved Successfully");
-    document.getElementById('fields').innerHTML = "";
+    document.getElementById('data2nd').innerHTML = "";
 }
-function displaydatafield(csvdata) {
-    var fields = document.getElementById('fields');
-    var temp = '<table class="table" style="color:whitesmoke;">';
+function displaydatafield(csvdata, showbtn) {
+    var fields = document.getElementById('data2nd');
+    var temp = '<table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" style="width:100%;text-align:center;">';
     var len = csvdata.length;
     temp += "<tr><th>Sr No.</th>";
     for (i = 0; i < csvdata[0].length; i++) {
@@ -59,14 +59,15 @@ function displaydatafield(csvdata) {
     }
     temp += "</table>";
 
-    temp += `<button type="button" class="btn btn-success" onclick="savetolocalstorage();">Save</button><br>`;
-
+    if (showbtn) {
+        temp += `<button type="button" class="btn btn-success" onclick="savetolocalstorage();">Save</button><br>`;
+    }
 
     fields.innerHTML = temp;
 }
 function viewrecentlysaved() {
     var data = JSON.parse(localStorage.getItem('studentdata'));
-    displaydatafield(data);
+    displaydatafield(data,false);
 }
 function showtotalpresentabsentchanges() {
     document.getElementById('presentshow').innerText = `Present : ${totalpresent}`;
@@ -101,7 +102,8 @@ function loadstudentdata() {
     var studentdata = JSON.parse(data['studentdata']);
     var totalstudents = totalabsent = data['totalstudent'];
     var fields = document.getElementById('data');
-    var temp = `<div style="justify-content: space-evenly; display: flex;">
+    var temp = `<span class="subjectheading">${subject} ${subjectcode}</span>`
+    temp += `<div style="justify-content: space-evenly; display: flex;">
     <button type="button"
         class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
         onclick="presentorabsent('Mark Present');" id="mb2">Mark Present</button>
@@ -130,9 +132,12 @@ function loadstudentdata() {
     class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored markattendencebtn" onclick="downloadattendence();">
     <i class="material-icons">done</i>
 </button>`;
+
+    temp += `<button type="button" onclick="displaysubjects();" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+Change Subject
+</button>`
     fields.innerHTML = temp;
 }
-// loadstudentdata();
 
 function presentabsentmark() {
     var data = loaddatafromlocalstorage();
@@ -189,6 +194,14 @@ var subjectcode;
 function checkClass(name, code) {
     subject = name;
     subjectcode = code;
+    var subjects = JSON.parse(localStorage.getItem('subjects'));
+    for (i of subjects) {
+        if (code == i[1]) {
+            document.getElementById(`${i[1]}`).className = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent";
+        } else {
+            document.getElementById(`${i[1]}`).className = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect";
+        }
+    }
 }
 function filename() {
     var today = new Date();
@@ -228,14 +241,34 @@ function savesubject() {
     displaysubjects();
 }
 function displaysubjects() {
+    subjectcode = subject = null;
     var data = JSON.parse(localStorage.getItem('subjects'));
     var temp = '';
     for (i = 0; i < data.length; i++) {
-        temp += `<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="checkClass('${data[i][0]}','${data[i][1]}');">${data[i][0]} ${data[i][1]}</button>`;
+        temp += `<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="font-size: 1rem;height: 5rem;margin-bottom: 1rem; width: 60%;" onclick="checkClass('${data[i][0]}','${data[i][1]}');" id="${data[i][1]}">${data[i][0]} <br> ${data[i][1]}</button><br>`;
     }
-    document.getElementById("subjectsshow").innerHTML = temp;
+    temp += `
+    <button type="button" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" onclick="checktoloadstudentdata();">
+      <i class="material-icons">navigate_next</i>
+    </button>
+    `
+    document.getElementById("data").innerHTML = temp;
 }
 displaysubjects();
+
+function showtoast(messageshow) {
+    var snackbarContainer = document.querySelector('#demo-toast-example');
+    var data = { message: messageshow };
+    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+};
+
+function checktoloadstudentdata() {
+    if (subject == null) {
+        showtoast("Select Subject");
+    } else {
+        loadstudentdata();
+    }
+}
 var option = "Mark Present";
 function presentorabsent(op) {
     if (op == "Mark Absent") {
@@ -255,3 +288,4 @@ function presentorabsent(op) {
     }
     showtotalpresentabsentchanges();
 }
+

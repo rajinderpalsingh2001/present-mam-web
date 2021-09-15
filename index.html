@@ -66,8 +66,8 @@ mdl-layout--fixed-tabs">
             <!-- Tabs -->
             <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
                 <a href="#home" class="mdl-layout__tab is-active">Home</a>
-                <a href="#team" class="mdl-layout__tab">Team</a>
-                <a href="#contact" class="mdl-layout__tab">Contact</a>
+                <a href="#viewdata" class="mdl-layout__tab" onclick="viewrecentlysaved();">View Students</a>
+                <a href="#settings" class="mdl-layout__tab">Settings</a>
             </div>
         </header>
         <div class="mdl-layout__drawer">
@@ -80,34 +80,35 @@ mdl-layout--fixed-tabs">
             </nav>
         </div>
         <main class="mdl-layout__content">
-            <section class="mdl-layout__tab-panel is-active" id="home">
-                <div class="page-content text-center">
-                    
+            <section class="mdl-layout__tab-panel" id="home">
+                <div class="page-content text-center">                    
+
                     <div id="data">
 
+                    </div>                    
+
+                    <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+                        <div class="mdl-snackbar__text"></div>
+                        <button class="mdl-snackbar__action" type="button"></button>
                     </div>
-                    <div id="subjectsshow">
-
-                    </div>
-                    <div id="fields">
-
-                    </div>
-
-
 
                 </div>
 
             </section>
-            <section class="mdl-layout__tab-panel" id="team">
+            <section class="mdl-layout__tab-panel" id="viewdata">
                 <div class="page-content">
-                    <div class="mdl-grid" style="justify-content: center;" id="memberdatagrid">
+                    <div id="data2nd">
 
                     </div>
                 </div>
             </section>
-            <section class="mdl-layout__tab-panel" id="contact">
+            <section class="mdl-layout__tab-panel is-active" id="settings">
                 <div class="page-content">
-
+                    <input type="file" id='csvfile'  oninput="readcsv(this);" accept=".csv">
+                    <button type="button" class="btn btn-success" onclick="viewrecentlysaved();">View Recently Saved</button>
+                    <button type="button" class="btn btn-danger" onclick="cleardata();">Clear Data</button>        
+                    <hr>
+                    <button type="button" class="btn btn-danger" onclick="addsubjects();">Add Subjects</button>        
                 </div>
             </section>
         </main>
