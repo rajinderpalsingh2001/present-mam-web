@@ -61,28 +61,78 @@ function displaydatafield(csvdata) {
 
     temp += `<button type="button" class="btn btn-success" onclick="savetolocalstorage();">Save</button><br>`;
 
-    console.log(len - 2);
+
     fields.innerHTML = temp;
 }
 function viewrecentlysaved() {
     var data = JSON.parse(localStorage.getItem('studentdata'));
     displaydatafield(data);
 }
-
+function showtotalpresentabsentchanges() {
+    document.getElementById('presentshow').innerText = `Present : ${totalpresent}`;
+    document.getElementById('absentshow').innerText = `Absent : ${totalabsent}`;
+}
+function addclasstome(id) {
+    if ($(`#${id}`).is(':checked')) {
+        $(`#${id}label`).addClass("pinkme");
+        if (option == "Mark Absent") {
+            totalpresent--;
+            totalabsent++;
+        } else {
+            totalpresent++;
+            totalabsent--;
+        }
+    } else {
+        $(`#${id}label`).removeClass("pinkme");
+        if (option == "Mark Absent") {
+            totalpresent++;
+            totalabsent--;
+        } else {
+            totalpresent--;
+            totalabsent++;
+        }
+    }
+    showtotalpresentabsentchanges();
+}
+var totalpresent = 0;
+var totalabsent = 0;
 function loadstudentdata() {
     var data = loaddatafromlocalstorage();
     var studentdata = JSON.parse(data['studentdata']);
-    var totalstudents = data['totalstudent'];
+    var totalstudents = totalabsent = data['totalstudent'];
     var fields = document.getElementById('data');
-    var temp = `Total Students : ${totalstudents}<br> `;
+    var temp = `<div style="justify-content: space-evenly; display: flex;">
+    <button type="button"
+        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+        onclick="presentorabsent('Mark Present');" id="mb2">Mark Present</button>
+    <button type="button" class="mdl-button mdl-js-button mdl-button--raised"
+        onclick="presentorabsent('Mark Absent');" id="mb1">Mark Absent</button>
+
+</div>
+<div style="display: flex; justify-content: space-evenly; padding-top: 1rem; padding-bottom: 1rem;">
+    <span class="mdl-chip">
+        <span class="mdl-chip__text" id="presentshow">Present : 0</span>
+    </span>
+    <span class="mdl-chip">
+        <span class="mdl-chip__text" id="totalshow">Total : ${totalstudents}</span>
+    </span>
+    <span class="mdl-chip">
+        <span class="mdl-chip__text" id="absentshow">Absent : ${totalstudents}</span>
+    </span>
+</div>`;
+    fields.innerHTML = temp;
+    showtotalpresentabsentchanges();
     for (i = 1; i < totalstudents + 1; i++) {
-        temp += `<label for="${studentdata[i][1]}">${studentdata[i][0]}</label>
-                <input type="checkbox" id="${studentdata[i][1]}"><br>`;
+        temp += `<label for="${studentdata[i][1]}" class="mdl-button mdl-js-button mdl-button--raised studentlist" style="font-size: 1rem;height: 5rem;margin-bottom: 1rem;" id="${studentdata[i][1]}label">${studentdata[i][0]}<br> ${studentdata[i][1]}</label>
+                <input type="checkbox" style="display:none;" id="${studentdata[i][1]}" onchange="addclasstome(this.id)"><br>`;
     }
-    temp += `<button type="button" class="btn btn-primary" onclick=downloadattendence();>Mark Attendence</button>`
+    temp += `<button type="button"
+    class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored markattendencebtn" onclick="downloadattendence();">
+    <i class="material-icons">done</i>
+</button>`;
     fields.innerHTML = temp;
 }
-loadstudentdata();
+// loadstudentdata();
 
 function presentabsentmark() {
     var data = loaddatafromlocalstorage();
@@ -90,13 +140,13 @@ function presentabsentmark() {
     var totalstudents = data['totalstudent'];
     studentdata[0][2] = "Status";
     for (i = 1; i < totalstudents + 1; i++) {
-        if (option == "Mark Presence") {
+        if (option == "Mark Present") {
             if ($(`#${studentdata[i][1]}`).is(':checked')) {
                 studentdata[i][2] = "Present";
             } else {
                 studentdata[i][2] = "Absent";
             }
-        }else{
+        } else {
             if ($(`#${studentdata[i][1]}`).is(':checked')) {
                 studentdata[i][2] = "Absent";
             } else {
@@ -181,16 +231,27 @@ function displaysubjects() {
     var data = JSON.parse(localStorage.getItem('subjects'));
     var temp = '';
     for (i = 0; i < data.length; i++) {
-        temp += `<button type="button" class="btn btn-primary" onclick="checkClass('${data[i][0]}','${data[i][1]}');">${data[i][0]} ${data[i][1]}</button><br>`;
+        temp += `<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="checkClass('${data[i][0]}','${data[i][1]}');">${data[i][0]} ${data[i][1]}</button>`;
     }
     document.getElementById("subjectsshow").innerHTML = temp;
 }
 displaysubjects();
-var option = "Mark Presence";
+var option = "Mark Present";
 function presentorabsent(op) {
-    if (op == "Mark Absentee") {
-        option = "Mark Absentee";
+    if (op == "Mark Absent") {
+        option = "Mark Absent";
+        document.getElementById('mb1').className = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent";
+        document.getElementById('mb2').className = "mdl-button mdl-js-button mdl-button--raised";
+        var temp = totalabsent;
+        totalabsent = totalpresent;
+        totalpresent = temp;
     } else {
-        option = "Mark Presence";
+        option = "Mark Present";
+        document.getElementById('mb2').className = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent";
+        document.getElementById('mb1').className = "mdl-button mdl-js-button mdl-button--raised";
+        var temp = totalabsent;
+        totalabsent = totalpresent;
+        totalpresent = temp;
     }
+    showtotalpresentabsentchanges();
 }

@@ -1,8 +1,48 @@
 :root{
     --appdark: #161616ef;
-    --apptext:whitesmoke;
+    --apptext:whitesmoke;    
+    --googleblue: #4285F4;
+    --googlebluetwo: #42A5F5;
+    --googlered: #EA4335;
+    --googleyellow: #FBBC04;
+    --googlegreen: #34A853;
+    --googleredlight: #FFCDD2;
+    --googlepink:#ff4081;
 }
-body{
-    background-color: var(--appdark);
-    color: var(--apptext);
+body{    
+
+}
+
+.mdl-layout-title{
+    font-size: 1.5rem;
+}
+.mdl-layout__header, .mdl-layout__tab-bar {
+    background-color: var(--googleblue);
+}
+
+#home, #team, #contact{    
+    padding: 2rem;
+}
+.text-center{
+    text-align: center !important;
+}
+.row{    
+    padding-bottom: 0.5rem;
+}
+.studentlist{
+    text-align: left;
+    width: 80%;    
+}
+
+.pinkme{
+    background-color: var(--googlepink) !important;
+    color:whitesmoke;
+}
+.blueme{
+    background-color: var(--googleblue) !important;
+}    
+.markattendencebtn{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
 }
