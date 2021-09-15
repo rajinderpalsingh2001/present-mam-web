@@ -20,7 +20,7 @@ body{
     background-color: var(--googleblue);
 }
 
-#home, #team, #contact{    
+#home, #viewdata, #settings{    
     padding: 2rem;
 }
 .text-center{
@@ -53,4 +53,11 @@ body{
 }
 .mdl-data-table td, .mdl-data-table th{
     text-align: left;
+}
+.alertbtn{
+    margin-top: 2rem;
+}
+
+input{
+    /* outline: none; */
 }

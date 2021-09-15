@@ -14,7 +14,7 @@ function readcsv(input) {
 
         reader.onload = function () {
             csvdata = $.csv.toArrays(reader.result)
-            displaydatafield(csvdata,true);
+            displaydatafield(csvdata, true, 'data3rd');
             // studentdata=$.csv.toObjects(reader.result);
             studentdata = csvdata;
         };
@@ -27,6 +27,8 @@ function readcsv(input) {
 function cleardata() {
     localStorage.clear();
     document.getElementById('data2nd').innerHTML = "";
+    document.getElementById('deletedialog').close();
+    showtoast("Student and Subject Data Deleted");
 }
 function loaddatafromlocalstorage() {
     var data = localStorage.getItem('studentdata');
@@ -37,11 +39,14 @@ function loaddatafromlocalstorage() {
 function savetolocalstorage() {
     localStorage.setItem('studentdata', JSON.stringify(studentdata));
     localStorage.setItem('totalstudents', studentdata.length);
-    alert("Saved Successfully");
-    document.getElementById('data2nd').innerHTML = "";
+    showtoast('Saved Students List')
+    document.getElementById('data3rd').innerHTML = "";
+    document.getElementById('csvfile').value = '';
 }
-function displaydatafield(csvdata, showbtn) {
-    var fields = document.getElementById('data2nd');
+
+
+function displaydatafield(csvdata, showbtn, elid) {
+    var fields = document.getElementById(elid);
     var temp = '<table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" style="width:100%;text-align:center;">';
     var len = csvdata.length;
     temp += "<tr><th>Sr No.</th>";
@@ -60,14 +65,21 @@ function displaydatafield(csvdata, showbtn) {
     temp += "</table>";
 
     if (showbtn) {
-        temp += `<button type="button" class="btn btn-success" onclick="savetolocalstorage();">Save</button><br>`;
+        temp += `<button type="button"
+    class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored markattendencebtn" onclick="savetolocalstorage();">
+    <i class="material-icons">save</i>
+</button>`;
     }
 
     fields.innerHTML = temp;
 }
 function viewrecentlysaved() {
     var data = JSON.parse(localStorage.getItem('studentdata'));
-    displaydatafield(data,false);
+    if (data == null) {
+        document.getElementById('data2nd').innerHTML = `<button type="button" onclick="document.getElementById('settingsbtn').click();" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent alertbtn">Go to Settings to add Data</button>`
+    } else {
+        displaydatafield(data, false, 'data2nd');
+    }
 }
 function showtotalpresentabsentchanges() {
     document.getElementById('presentshow').innerText = `Present : ${totalpresent}`;
@@ -100,10 +112,11 @@ var totalabsent = 0;
 function loadstudentdata() {
     var data = loaddatafromlocalstorage();
     var studentdata = JSON.parse(data['studentdata']);
-    var totalstudents = totalabsent = data['totalstudent'];
-    var fields = document.getElementById('data');
-    var temp = `<span class="subjectheading">${subject} ${subjectcode}</span>`
-    temp += `<div style="justify-content: space-evenly; display: flex;">
+    if (studentdata != null) {
+        var totalstudents = totalabsent = data['totalstudent'];
+        var fields = document.getElementById('data');
+        var temp = `<span class="subjectheading">${subject} ${subjectcode}</span>`
+        temp += `<div style="justify-content: space-evenly; display: flex;">
     <button type="button"
         class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
         onclick="presentorabsent('Mark Present');" id="mb2">Mark Present</button>
@@ -122,20 +135,23 @@ function loadstudentdata() {
         <span class="mdl-chip__text" id="absentshow">Absent : ${totalstudents}</span>
     </span>
 </div>`;
-    fields.innerHTML = temp;
-    showtotalpresentabsentchanges();
-    for (i = 1; i < totalstudents + 1; i++) {
-        temp += `<label for="${studentdata[i][1]}" class="mdl-button mdl-js-button mdl-button--raised studentlist" style="font-size: 1rem;height: 5rem;margin-bottom: 1rem;" id="${studentdata[i][1]}label">${studentdata[i][0]}<br> ${studentdata[i][1]}</label>
+        fields.innerHTML = temp;
+        showtotalpresentabsentchanges();
+        for (i = 1; i < totalstudents + 1; i++) {
+            temp += `<label for="${studentdata[i][1]}" class="mdl-button mdl-js-button mdl-button--raised studentlist" style="font-size: 1rem;height: 5rem;margin-bottom: 1rem;" id="${studentdata[i][1]}label">${studentdata[i][0]}<br> ${studentdata[i][1]}</label>
                 <input type="checkbox" style="display:none;" id="${studentdata[i][1]}" onchange="addclasstome(this.id)"><br>`;
-    }
-    temp += `<button type="button"
+        }
+        temp += `<button type="button"
     class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored markattendencebtn" onclick="downloadattendence();">
     <i class="material-icons">done</i>
 </button>`;
 
-    temp += `<button type="button" onclick="displaysubjects();" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+        temp += `<button type="button" onclick="displaysubjects();" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
 Change Subject
 </button>`
+    } else {
+        var temp = `<button type="button" onclick="document.getElementById('settingsbtn').click();" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent alertbtn">Go to Settings to add Data</button>`;
+    }
     fields.innerHTML = temp;
 }
 
@@ -226,10 +242,21 @@ function downloadattendence() {
 
 function addsubjects() {
     var temp = '';
-    temp += `<input type="text" placeholder="Subject Name" id="subname">`;
-    temp += `<input type="text" placeholder="Subject Code" id="subcode">`;
-    temp += `<button type="button" class="btn btn-success" onclick="savesubject();">Add</button>`;
-    document.getElementById('subjectsdata').innerHTML = temp;
+    temp += `<div class="mdl-textfield mdl-js-textfield">
+    <input class="mdl-textfield__input" type="text" id="subname">
+    <label class="mdl-textfield__label" for="subname">Subject Name</label>
+  </div>`;
+
+    temp += `<div class="mdl-textfield mdl-js-textfield">
+    <input class="mdl-textfield__input" type="text" id="subcode">
+    <label class="mdl-textfield__label" for="subcode">Subject Code</label>
+  </div>`;
+
+    temp += `
+    <button type="button" onclick="savesubject();" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+      <i class="material-icons">add</i>
+    </button>`;
+    document.getElementById('data3rd').innerHTML = temp;
 }
 function savesubject() {
     var data = JSON.parse(localStorage.getItem('subjects'));
@@ -238,20 +265,26 @@ function savesubject() {
     }
     data.push([document.getElementById("subname").value, document.getElementById('subcode').value]);
     localStorage.setItem('subjects', JSON.stringify(data));
-    displaysubjects();
+    showtoast(`${document.getElementById("subname").value} added`);
+    document.getElementById("subname").value = '';
+    document.getElementById("subcode").value = '';
+    document.getElementById("data3rd").innerHTML = '';
 }
 function displaysubjects() {
     subjectcode = subject = null;
     var data = JSON.parse(localStorage.getItem('subjects'));
-    var temp = '';
-    for (i = 0; i < data.length; i++) {
-        temp += `<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="font-size: 1rem;height: 5rem;margin-bottom: 1rem; width: 60%;" onclick="checkClass('${data[i][0]}','${data[i][1]}');" id="${data[i][1]}">${data[i][0]} <br> ${data[i][1]}</button><br>`;
-    }
-    temp += `
+    if (data != null) {
+        var temp = '';
+        for (i = 0; i < data.length; i++) {
+            temp += `<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="font-size: 1rem;height: 5rem;margin-bottom: 1rem; width: 60%;" onclick="checkClass('${data[i][0]}','${data[i][1]}');" id="${data[i][1]}">${data[i][0]} <br> ${data[i][1]}</button><br>`;
+        }
+        temp += `
     <button type="button" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" onclick="checktoloadstudentdata();">
       <i class="material-icons">navigate_next</i>
     </button>
-    `
+    `} else {
+        var temp = `<button type="button" onclick="document.getElementById('settingsbtn').click();" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent alertbtn">Go to Settings to add Data</button>`;
+    }
     document.getElementById("data").innerHTML = temp;
 }
 displaysubjects();

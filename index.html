@@ -67,48 +67,81 @@ mdl-layout--fixed-tabs">
             <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
                 <a href="#home" class="mdl-layout__tab is-active">Home</a>
                 <a href="#viewdata" class="mdl-layout__tab" onclick="viewrecentlysaved();">View Students</a>
-                <a href="#settings" class="mdl-layout__tab">Settings</a>
+                <a href="#settings" id="settingsbtn" class="mdl-layout__tab">Settings</a>
             </div>
         </header>
         <div class="mdl-layout__drawer">
             <span class="mdl-layout-title">Present Mam</span>
             <nav class="mdl-navigation">
-                <a class="mdl-navigation__link" href="https://github.com/orgs/gdscgndu/repositories">Projects</a>
-                <a class="mdl-navigation__link" href="https://forms.gle/bE84bXrjFoTWp6q3A">Become a Member</a>
-                <a class="mdl-navigation__link"
-                    href="https://gdsc.community.dev/guru-nanak-dev-university-amritsar/#past-events">Past Events</a>
+                <a class="mdl-navigation__link" href="#">Link</a>
+                <a class="mdl-navigation__link" href="#">Link</a>                
             </nav>
         </div>
         <main class="mdl-layout__content">
-            <section class="mdl-layout__tab-panel" id="home">
-                <div class="page-content text-center">                    
+            <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+                <div class="mdl-snackbar__text"></div>
+                <button class="mdl-snackbar__action" type="button"></button>
+            </div>
+
+            <dialog id="deletedialog" class="mdl-dialog">
+                <h3 class="mdl-dialog__title">Warning!</h3>
+                <div class="mdl-dialog__content">
+                    <p>
+                        Student List and Subjects will be erased forever!<br>
+                        Are you sure to Delete?
+                    </p>
+                </div>
+                <div class="mdl-dialog__actions">
+
+                    <button class="mdl-button mdl-js-button" type="button"
+                        onclick="document.getElementById('deletedialog').close();">
+                        Cancel
+                    </button>
+
+                    <button type="button" class="mdl-button " onclick="cleardata();">Delete</button>
+
+                </div>
+            </dialog>
+
+            <section class="mdl-layout__tab-panel is-active" id="home">
+                <div class="page-content text-center">
 
                     <div id="data">
 
-                    </div>                    
-
-                    <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
-                        <div class="mdl-snackbar__text"></div>
-                        <button class="mdl-snackbar__action" type="button"></button>
                     </div>
 
                 </div>
 
             </section>
             <section class="mdl-layout__tab-panel" id="viewdata">
-                <div class="page-content">
+                <div class="page-content text-center">
                     <div id="data2nd">
 
                     </div>
                 </div>
             </section>
-            <section class="mdl-layout__tab-panel is-active" id="settings">
+            <section class="mdl-layout__tab-panel" id="settings">
                 <div class="page-content">
-                    <input type="file" id='csvfile'  oninput="readcsv(this);" accept=".csv">
-                    <button type="button" class="btn btn-success" onclick="viewrecentlysaved();">View Recently Saved</button>
-                    <button type="button" class="btn btn-danger" onclick="cleardata();">Clear Data</button>        
+                    <button type="button" onclick="document.getElementById('csvfile').click();"
+                        class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                        <i class="material-icons">upload_file</i>
+                        <input type="file" id='csvfile' oninput="readcsv(this);" accept=".csv" style="display: none;">
+                    </button>
+
+                    <button type="button" onclick="document.getElementById('deletedialog').showModal();"
+                        class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                        <i class="material-icons">delete_forever</i>
+                    </button>
+
                     <hr>
-                    <button type="button" class="btn btn-danger" onclick="addsubjects();">Add Subjects</button>        
+                    
+                    <button type="button" onclick="addsubjects();" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                        Add Subjects
+                    </button>                    
+
+                    <div id="data3rd">
+
+                    </div>
                 </div>
             </section>
         </main>
