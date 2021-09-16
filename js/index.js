@@ -105,6 +105,7 @@ function addclasstome(id) {
             totalabsent++;
         }
     }
+    document.getElementById('upload').innerText="add_to_drive";
     showtotalpresentabsentchanges();
 }
 function checkbeforesaveattendence(totalstudents) {
@@ -118,7 +119,7 @@ function checkbeforesaveattendence(totalstudents) {
     <span class="mdl-chip">
         <span class="mdl-chip__text" id="absentshow">Absent : ${totalabsent}</span>
     </span>
-</div>`
+</div>`    
     document.getElementById('finalattendencedialogdata').innerHTML = data;
     document.getElementById('finalattendencedialog').showModal();
 }
@@ -186,36 +187,56 @@ function presentabsentmark() {
     var studentdata = JSON.parse(data['studentdata']);
     var totalstudents = data['totalstudent'];
     studentdata[0][2] = "Status";
+    var cntpresent=0;
+    var cntabsent=0;
     for (i = 1; i < totalstudents + 1; i++) {
         if (option == "Mark Present") {
             if ($(`#${studentdata[i][1]}`).is(':checked')) {
                 studentdata[i][2] = "Present";
+                cntpresent++;
             } else {
                 studentdata[i][2] = "Absent";
+                cntabsent++;
             }
         } else {
             if ($(`#${studentdata[i][1]}`).is(':checked')) {
                 studentdata[i][2] = "Absent";
+                cntabsent++;
             } else {
                 studentdata[i][2] = "Present";
+                cntpresent++;
             }
         }
 
     }
     localStorage.setItem('previousattendence', JSON.stringify(studentdata));
+    var ar=[cntpresent,cntabsent,option];
+    localStorage.setItem('previousattendencenumberdata', JSON.stringify(ar));
     return studentdata;
 }
 function loadfrompreviousattendence() {
     var data = JSON.parse(localStorage.getItem('previousattendence'));    
+    var datanum = JSON.parse(localStorage.getItem('previousattendencenumberdata'));
+    
+    
+    option=datanum[2];        
+    if(option=="Mark Present"){
+        totalpresent=datanum[1];
+        totalabsent=datanum[0];
+    }else{
+        totalpresent=datanum[0];
+        totalabsent=datanum[1];
+    }
+    presentorabsent(option);    
+
     var len = data.length;
+
     if (option == "Mark Absent") {
         for (var i = 0; i < len; i++) {
             if (data[i][2] == "Absent") {
                 $(`#${data[i][1]}label`).addClass("pinkme");
                 document.getElementById(data[i][1]).checked = true;
             }
-
-
         }
     } else {
         for (var i = 0; i < len; i++) {

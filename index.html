@@ -108,7 +108,7 @@ mdl-layout--fixed-tabs">
                 <div class="mdl-dialog__content">
                     <p id="finalattendencedialogdata">
 
-                    </p>
+                    </p>                    
                     <button class="mdl-button mdl-js-button" type="button" id="upload">
                         <i id="drivestatus" class="material-icons">add_to_drive</i>                        
                     </button>
@@ -155,6 +155,12 @@ mdl-layout--fixed-tabs">
                         class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
                         <i class="material-icons">delete_forever</i>
                     </button>
+
+                    <button type="button" onclick="localStorage.removeItem('previousattendencenumberdata'); localStorage.removeItem('previousattendence')"
+                        class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
+                        Delete Previous
+                    </button>
+                    
 
                     <hr>
 
