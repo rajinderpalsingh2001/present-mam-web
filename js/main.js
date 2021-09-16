@@ -1,6 +1,6 @@
 $(document).ready(function () {
     var clientId = "32404943670-lm2vtidqcri5fftggct45ofm5a1sbqse.apps.googleusercontent.com";
-    var redirect_uri = "http://localhost:5500/index.html";
+    var redirect_uri = "https://sairish2001.github.io/present-mam-web/index.html";
     var scope = "https://www.googleapis.com/auth/drive";
 
     var url = "";
