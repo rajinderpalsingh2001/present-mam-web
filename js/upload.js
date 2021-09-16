@@ -1,7 +1,7 @@
 $(document).ready(function () {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
-    const redirect_uri = "http://localhost:5500/index.html"
+    const redirect_uri = "https://sairish2001.github.io/present-mam-web/index.html"
     const client_secret = "BH6nA96WX3LG60HzxSPpeniX";
     const scope = "https://www.googleapis.com/auth/drive";
     var access_token = "";
