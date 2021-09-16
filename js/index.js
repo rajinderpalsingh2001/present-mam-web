@@ -380,8 +380,3 @@ function presentorabsent(op) {
     showtotalpresentabsentchanges();
 }
 
-
-
-function savetodrive(){
-    
-}

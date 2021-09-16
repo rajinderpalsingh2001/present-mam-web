@@ -21,8 +21,7 @@ $(document).ready(function () {
         },
         dataType: "json",
         success: function (resultData) {
-            localStorage.setItem("accessToken", resultData.access_token);
-            console.log(resultData.name)            
+            localStorage.setItem("accessToken", resultData.access_token);            
             localStorage.setItem("refreshToken", resultData.refreshToken);
             localStorage.setItem("expires_in", resultData.expires_in);
             window.history.pushState({}, document.title, "/index.html");            
@@ -35,8 +34,7 @@ $(document).ready(function () {
 
     Upload.prototype.doUpload = function () {
         var that = this;
-        var formData = new FormData();
-        console.log(this.file)
+        var formData = new FormData();        
         formData.append("file", this.file, filename() + '.csv');
         formData.append("upload_file", true);
 
@@ -58,10 +56,10 @@ $(document).ready(function () {
                 return myXhr;
             },
             success: function (data) {
-                console.log(data);
+                document.getElementById("upload").innerHTML=`<i id="drivestatus" class="material-icons">file_download_done</i>`;
             },
             error: function (error) {
-                console.log(error);
+                document.getElementById("upload").innerHTML=`<i id="drivestatus" class="material-icons">error</i><i id="drivestatus" class="material-icons">refresh</i>`;
             },
             async: true,
             data: formData,
@@ -72,25 +70,14 @@ $(document).ready(function () {
         });
     };
 
-    Upload.prototype.progressHandling = function (event) {
-        var percent = 0;
-        var position = event.loaded || event.position;
-        var total = event.total;
-        var progress_bar_id = "#progress-wrp";
-        if (event.lengthComputable) {
-            percent = Math.ceil(position / total * 100);
-        }
-
-        $(progress_bar_id + " .progress-bar").css("width", +percent + "%");
-        $(progress_bar_id + " .status").text(percent + "%");
-    };
-
-    $("#upload").on("click", function (e) {        
-    var csvContent = $.csv.fromArrays(presentabsentmark());
-    var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    var file=new File([blob], filename()+'.csv');
-        var upload = new Upload(file);        
-        upload.doUpload();
+    $("#upload").on("click", function (e) {
+        if(document.getElementById("upload").innerText!="file_download_done"){
+            var csvContent = $.csv.fromArrays(presentabsentmark());
+            var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            var file=new File([blob], filename()+'.csv');
+                var upload = new Upload(file);        
+                upload.doUpload();
+        }   
     });
 
 });
