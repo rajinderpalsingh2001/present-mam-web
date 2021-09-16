@@ -105,7 +105,7 @@ function addclasstome(id) {
             totalabsent++;
         }
     }
-    document.getElementById('upload').innerText="add_to_drive";
+    document.getElementById('drivestatus').innerText="add_to_drive";
     showtotalpresentabsentchanges();
 }
 function checkbeforesaveattendence(totalstudents) {
