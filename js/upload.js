@@ -21,10 +21,10 @@ $(document).ready(function () {
         },
         dataType: "json",
         success: function (resultData) {
-            localStorage.setItem("accessToken", resultData.access_token);            
+            localStorage.setItem("accessToken", resultData.access_token);
             localStorage.setItem("refreshToken", resultData.refreshToken);
             localStorage.setItem("expires_in", resultData.expires_in);
-            window.history.pushState({}, document.title, "/present-mam/index.html");            
+            window.history.pushState({}, document.title, "/present-mam/index.html");
         }
     });
 
@@ -34,7 +34,7 @@ $(document).ready(function () {
 
     Upload.prototype.doUpload = function () {
         var that = this;
-        var formData = new FormData();        
+        var formData = new FormData();
         formData.append("file", this.file, filename() + '.csv');
         formData.append("upload_file", true);
 
@@ -56,12 +56,12 @@ $(document).ready(function () {
                 return myXhr;
             },
             success: function (data) {
-                document.getElementById("upload").innerHTML=`<i id="drivestatus" class="material-icons">file_download_done</i>`;
-                document.getElementById('loadicon').innerHTML='';
+                document.getElementById("upload").innerHTML = `<i id="drivestatus" class="material-icons">file_download_done</i>`;
+                document.getElementById('loadicon').innerHTML = '';
             },
             error: function (error) {
-                document.getElementById("upload").innerHTML=`<i id="drivestatus" class="material-icons">error</i><i id="drivestatus" class="material-icons">refresh</i>`;
-                document.getElementById('loadicon').innerHTML='';
+                document.getElementById("upload").innerHTML = `<i id="drivestatus" class="material-icons">error</i><i id="drivestatus" class="material-icons">refresh</i>`;
+                document.getElementById('loadicon').innerHTML = '';
             },
             async: true,
             data: formData,
@@ -73,14 +73,18 @@ $(document).ready(function () {
     };
 
     $("#upload").on("click", function (e) {
-        if(document.getElementById("upload").innerText!="file_download_done"){
-            document.getElementById("loadicon").innerHTML=`<div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>`;
-            var csvContent = $.csv.fromArrays(presentabsentmark());
-            var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            var file=new File([blob], filename()+'.csv');
-                var upload = new Upload(file);        
+        if (document.getElementById("upload").innerText != "file_download_done") {            
+            if (localStorage.getItem('accessToken') == null) {
+                showtoast("Sign in required");
+            } else {
+                document.getElementById("loadicon").innerHTML = `<div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>`;
+                var csvContent = $.csv.fromArrays(presentabsentmark());
+                var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                var file = new File([blob], filename() + '.csv');
+                var upload = new Upload(file);
                 upload.doUpload();
-        }   
+            }
+        }
     });
 
 });
