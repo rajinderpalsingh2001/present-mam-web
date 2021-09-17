@@ -372,7 +372,7 @@ function savesubject() {
     document.getElementById("subname").value = '';
     document.getElementById("subcode").value = '';
     document.getElementById("subjectdata").innerHTML = '';
-    console.log(localStorage.getItem('subjects'));
+    
 }
 
 function displaysubjects() {
@@ -433,8 +433,7 @@ function presentorabsent(op) {
 
 var classname = '';
 function realtimeupdateclassname(val) {
-    classname = val;
-    console.log(classname)
+    classname = val;    
 }
 function addclass() {
     var temp = '';
@@ -467,7 +466,7 @@ function displayclasses() {
     if (data != null) {
 
         for (i in data) {
-            temp += `<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="selectclass('${i}');">${i}</button><br><br>`;
+            temp += `<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent classesbtn" onclick="selectclass('${i}');">${i}</button><br><br>`;
         }
     } else {
         temp = `<button type="button" onclick="document.getElementById('settingsbtn').click();" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent alertbtn">Go to Settings to add Data</button>`;

@@ -61,3 +61,8 @@ button[disabled]{
   background-color: var(--googlepink) !important;  
   color: whitesmoke !important;
 }
+.classesbtn{
+    height:5rem;
+    width: 80%;   
+     
+}
