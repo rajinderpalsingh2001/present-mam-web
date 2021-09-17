@@ -81,13 +81,21 @@ function displaydatafield(csvdata, showbtn, elid) {
 
     fields.innerHTML = temp;
 }
-function viewrecentlysaved() {
-    var data = JSON.parse(localStorage.getItem('studentdata'));
+function viewrecentlysaveddata(){
+    var data = JSON.parse(localStorage.getItem('studentdata'))[classname];
     if (data == null) {
         document.getElementById('data2nd').innerHTML = `<button type="button" onclick="document.getElementById('settingsbtn').click();" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent alertbtn">Go to Settings to add Data</button>`
     } else {
         displaydatafield(data, false, 'data2nd');
     }
+}
+function viewrecentlysaved() {
+    var data=JSON.parse(localStorage.getItem('totalstudents'));
+    var temp='';
+    for(i in data){
+        temp+=`<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="viewrecentlysaveddata('${i}');">${i}</button><br><br>`;
+    }
+    document.getElementById('data2nd').innerHTML=temp;    
 }
 function showtotalpresentabsentchanges() {
     document.getElementById('presentshow').innerText = `Present : ${totalpresent}`;
