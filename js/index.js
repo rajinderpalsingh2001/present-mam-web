@@ -92,15 +92,13 @@ function viewrecentlysaveddata() {
 function viewrecentlysaved() {
     var data = JSON.parse(localStorage.getItem('totalstudents'));
     var temp = '';
-    if (data != null) {
-
-
+    // if (data != null) {
         for (i in data) {
             temp += `<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="viewrecentlysaveddata('${i}');">${i}</button><br><br>`;
         }
-    }else{
-        temp = `<button type="button" onclick="document.getElementById('settingsbtn').click();" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent alertbtn">Go to Settings to add Data</button>`;
-    }
+    // }else{
+    //     temp = `<button type="button" onclick="document.getElementById('settingsbtn').click();" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent alertbtn">Go to Settings to add Data</button>`;
+    // }
     document.getElementById('data2nd').innerHTML = temp;
 }
 function showtotalpresentabsentchanges() {
