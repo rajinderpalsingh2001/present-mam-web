@@ -323,7 +323,7 @@ function filename() {
         minute: 'numeric',
         hour12: true
     })
-    return (`${subject} (${subjectcode}) - ${date} - ${time}`);
+    return (`${classname} - ${subject} (${subjectcode}) - ${date} - ${time}`);
 }
 function downloadattendence() {
     var csvContent = $.csv.fromArrays(presentabsentmark());
