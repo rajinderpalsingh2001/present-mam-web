@@ -144,7 +144,7 @@ var totalpresent = 0;
 var totalabsent = 0;
 function loadstudentdata(data) {
     var studentdata = JSON.parse(data['studentdata'])[classname];
-    var previousdata = JSON.parse(localStorage.getItem('previousattendence'))[classname];
+    var previousdata = JSON.parse(localStorage.getItem('previousattendence'));
     var temp = "";
     if (studentdata != null) {
         var temp2 = '';
