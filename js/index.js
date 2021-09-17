@@ -35,22 +35,22 @@ function loaddatafromlocalstorage() {
     return { 'studentdata': data, 'totalstudent': parseInt(totaldtudent) - 1 };
 }
 
-function savetolocalstorage() {    
+function savetolocalstorage() {
     var ar = JSON.parse(localStorage.getItem('studentdata'));
     if (ar == null) {
         ar = {};
-    }    
-    ar[classname]=studentdata;
-        
+    }
+    ar[classname] = studentdata;
+
     var ar2 = JSON.parse(localStorage.getItem('totalstudents'));
     if (ar2 == null) {
         ar2 = {};
     }
-    ar2[classname] = studentdata.length;    
+    ar2[classname] = studentdata.length;
     localStorage.setItem('studentdata', JSON.stringify(ar));
     localStorage.setItem('totalstudents', JSON.stringify(ar2));
-    showtoast('Saved Students List')    
-    document.getElementById("data3rdstudent").innerHTML='';
+    showtoast('Saved Students List')
+    document.getElementById("data3rdstudent").innerHTML = '';
 }
 
 function displaydatafield(csvdata, showbtn, elid) {
@@ -81,7 +81,7 @@ function displaydatafield(csvdata, showbtn, elid) {
 
     fields.innerHTML = temp;
 }
-function viewrecentlysaveddata(){
+function viewrecentlysaveddata() {
     var data = JSON.parse(localStorage.getItem('studentdata'))[classname];
     if (data == null) {
         document.getElementById('data2nd').innerHTML = `<button type="button" onclick="document.getElementById('settingsbtn').click();" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent alertbtn">Go to Settings to add Data</button>`
@@ -90,12 +90,18 @@ function viewrecentlysaveddata(){
     }
 }
 function viewrecentlysaved() {
-    var data=JSON.parse(localStorage.getItem('totalstudents'));
-    var temp='';
-    for(i in data){
-        temp+=`<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="viewrecentlysaveddata('${i}');">${i}</button><br><br>`;
+    var data = JSON.parse(localStorage.getItem('totalstudents'));
+    var temp = '';
+    if (data != null) {
+
+
+        for (i in data) {
+            temp += `<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="viewrecentlysaveddata('${i}');">${i}</button><br><br>`;
+        }
+    }else{
+        temp = `<button type="button" onclick="document.getElementById('settingsbtn').click();" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent alertbtn">Go to Settings to add Data</button>`;
     }
-    document.getElementById('data2nd').innerHTML=temp;    
+    document.getElementById('data2nd').innerHTML = temp;
 }
 function showtotalpresentabsentchanges() {
     document.getElementById('presentshow').innerText = `Present : ${totalpresent}`;
@@ -225,12 +231,12 @@ function presentabsentmark() {
         }
 
     }
-    var d={};
-    d[classname]=studentdata;
+    var d = {};
+    d[classname] = studentdata;
     localStorage.setItem('previousattendence', JSON.stringify(d));
-    
-    var d2={};
-    d2[classname]=[cntpresent, cntabsent, option];
+
+    var d2 = {};
+    d2[classname] = [cntpresent, cntabsent, option];
     localStorage.setItem('previousattendencenumberdata', JSON.stringify(d2));
     return studentdata;
 }
@@ -358,8 +364,8 @@ function savesubject() {
     if (data == null) {
         data = {};
     }
-    if (data[classname] == undefined) {        
-        data[classname] = [[document.getElementById("subname").value, document.getElementById('subcode').value]];        
+    if (data[classname] == undefined) {
+        data[classname] = [[document.getElementById("subname").value, document.getElementById('subcode').value]];
     } else {
         data[classname].push([document.getElementById("subname").value, document.getElementById('subcode').value]);
     }
@@ -370,7 +376,7 @@ function savesubject() {
     document.getElementById("subjectdata").innerHTML = '';
     console.log(localStorage.getItem('subjects'));
 }
-console.log(localStorage.getItem('studentdata'));
+
 function displaysubjects() {
     subjectcode = subject = null;
     var data = JSON.parse(localStorage.getItem('subjects'))[classname];
@@ -446,22 +452,27 @@ class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-butt
 Add Subjects
 </button>       `;
     temp += `
-    <button type="button" onclick="savesubject();" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
-      <i class="material-icons">add</i>
+    <button type="button" onclick="document.getElementById('data3rd').innerHTML='';" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+      <i class="material-icons">done</i>
     </button>`;
     document.getElementById("data3rd").innerHTML = temp;
 }
 displayclasses();
 
-function selectclass(val){
-    classname=val;
+function selectclass(val) {
+    classname = val;
     displaysubjects();
 }
-function displayclasses(){
-    var data=JSON.parse(localStorage.getItem('totalstudents'));
-    var temp='';
-    for(i in data){
-        temp+=`<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="selectclass('${i}');">${i}</button><br><br>`;
+function displayclasses() {
+    var data = JSON.parse(localStorage.getItem('totalstudents'));
+    var temp = '';
+    if (data != null) {
+
+        for (i in data) {
+            temp += `<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="selectclass('${i}');">${i}</button><br><br>`;
+        }
+    } else {
+        temp = `<button type="button" onclick="document.getElementById('settingsbtn').click();" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent alertbtn">Go to Settings to add Data</button>`;
     }
-    document.getElementById('data').innerHTML=temp;
+    document.getElementById('data').innerHTML = temp;
 }
