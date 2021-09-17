@@ -14,8 +14,7 @@ function readcsv(input) {
 
         reader.onload = function () {
             csvdata = $.csv.toArrays(reader.result)
-            displaydatafield(csvdata, true, 'data3rd');
-            // studentdata=$.csv.toObjects(reader.result);
+            displaydatafield(csvdata, true, 'data3rdstudent');
             studentdata = csvdata;
         };
 
@@ -32,18 +31,27 @@ function cleardata() {
 }
 function loaddatafromlocalstorage() {
     var data = localStorage.getItem('studentdata');
-    var totaldtudent = parseInt(localStorage.getItem('totalstudents'));
-    return { 'studentdata': data, 'totalstudent': totaldtudent - 1 };
+    var totaldtudent = JSON.parse(localStorage.getItem('totalstudents'))[classname];
+    return { 'studentdata': data, 'totalstudent': parseInt(totaldtudent) - 1 };
 }
 
-function savetolocalstorage() {
-    localStorage.setItem('studentdata', JSON.stringify(studentdata));
-    localStorage.setItem('totalstudents', studentdata.length);
-    showtoast('Saved Students List')
-    document.getElementById('data3rd').innerHTML = "";
-    document.getElementById('csvfile').value = '';
+function savetolocalstorage() {    
+    var ar = JSON.parse(localStorage.getItem('studentdata'));
+    if (ar == null) {
+        ar = {};
+    }    
+    ar[classname]=studentdata;
+        
+    var ar2 = JSON.parse(localStorage.getItem('totalstudents'));
+    if (ar2 == null) {
+        ar2 = {};
+    }
+    ar2[classname] = studentdata.length;    
+    localStorage.setItem('studentdata', JSON.stringify(ar));
+    localStorage.setItem('totalstudents', JSON.stringify(ar2));
+    showtoast('Saved Students List')    
+    document.getElementById("data3rdstudent").innerHTML='';
 }
-
 
 function displaydatafield(csvdata, showbtn, elid) {
     var fields = document.getElementById(elid);
@@ -105,7 +113,7 @@ function addclasstome(id) {
             totalabsent++;
         }
     }
-    document.getElementById('drivestatus').innerText="add_to_drive";
+    document.getElementById('drivestatus').innerText = "add_to_drive";
     showtotalpresentabsentchanges();
 }
 function checkbeforesaveattendence(totalstudents) {
@@ -119,7 +127,7 @@ function checkbeforesaveattendence(totalstudents) {
     <span class="mdl-chip">
         <span class="mdl-chip__text" id="absentshow">Absent : ${totalabsent}</span>
     </span>
-</div>`    
+</div>`
     document.getElementById('finalattendencedialogdata').innerHTML = data;
     document.getElementById('finalattendencedialog').showModal();
 }
@@ -127,11 +135,11 @@ function checkbeforesaveattendence(totalstudents) {
 var totalpresent = 0;
 var totalabsent = 0;
 function loadstudentdata(data) {
-    var studentdata = JSON.parse(data['studentdata']);
-    var previousdata = JSON.parse(localStorage.getItem('previousattendence'));
+    var studentdata = JSON.parse(data['studentdata'])[classname];
+    var previousdata = JSON.parse(localStorage.getItem('previousattendence'))[classname];
     var temp = "";
     if (studentdata != null) {
-        var temp2='';
+        var temp2 = '';
         if (previousdata != null) {
             var temp2 = `
             <button type="button" onclick="loadfrompreviousattendence();" class="mdl-button mdl-js-button mdl-button--accent markpreviousbtn">
@@ -184,11 +192,11 @@ Change Subject
 
 function presentabsentmark() {
     var data = loaddatafromlocalstorage();
-    var studentdata = JSON.parse(data['studentdata']);
+    var studentdata = JSON.parse(data['studentdata'])[classname];
     var totalstudents = data['totalstudent'];
     studentdata[0][2] = "Status";
-    var cntpresent=0;
-    var cntabsent=0;
+    var cntpresent = 0;
+    var cntabsent = 0;
     for (i = 1; i < totalstudents + 1; i++) {
         if (option == "Mark Present") {
             if ($(`#${studentdata[i][1]}`).is(':checked')) {
@@ -209,25 +217,29 @@ function presentabsentmark() {
         }
 
     }
-    localStorage.setItem('previousattendence', JSON.stringify(studentdata));
-    var ar=[cntpresent,cntabsent,option];
-    localStorage.setItem('previousattendencenumberdata', JSON.stringify(ar));
+    var d={};
+    d[classname]=studentdata;
+    localStorage.setItem('previousattendence', JSON.stringify(d));
+    
+    var d2={};
+    d2[classname]=[cntpresent, cntabsent, option];
+    localStorage.setItem('previousattendencenumberdata', JSON.stringify(d2));
     return studentdata;
 }
 function loadfrompreviousattendence() {
-    var data = JSON.parse(localStorage.getItem('previousattendence'));    
-    var datanum = JSON.parse(localStorage.getItem('previousattendencenumberdata'));
-    
-    
-    option=datanum[2];        
-    if(option=="Mark Present"){
-        totalpresent=datanum[1];
-        totalabsent=datanum[0];
-    }else{
-        totalpresent=datanum[0];
-        totalabsent=datanum[1];
+    var data = JSON.parse(localStorage.getItem('previousattendence'))[classname];
+    var datanum = JSON.parse(localStorage.getItem('previousattendencenumberdata'))[classname];
+
+
+    option = datanum[2];
+    if (option == "Mark Present") {
+        totalpresent = datanum[1];
+        totalabsent = datanum[0];
+    } else {
+        totalpresent = datanum[0];
+        totalabsent = datanum[1];
     }
-    presentorabsent(option);    
+    presentorabsent(option);
 
     var len = data.length;
 
@@ -282,7 +294,7 @@ var subjectcode;
 function checkClass(name, code) {
     subject = name;
     subjectcode = code;
-    var subjects = JSON.parse(localStorage.getItem('subjects'));
+    var subjects = JSON.parse(localStorage.getItem('subjects'))[classname];
     for (i of subjects) {
         if (code == i[1]) {
             document.getElementById(`${i[1]}`).className = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent";
@@ -291,7 +303,7 @@ function checkClass(name, code) {
         }
     }
 }
-function calculatepresentabsent(data, len){
+function calculatepresentabsent(data, len) {
     return [present, absent];
 }
 function filename() {
@@ -318,36 +330,42 @@ function downloadattendence() {
 function addsubjects() {
     var temp = '';
     temp += `<div class="mdl-textfield mdl-js-textfield">
-    <input class="mdl-textfield__input" type="text" id="subname">
-    <label class="mdl-textfield__label" for="subname">Subject Name</label>
+    <label  for="subname">Subject Name</label>
+    <input  type="text" id="subname">    
   </div>`;
 
-    temp += `<div class="mdl-textfield mdl-js-textfield">
-    <input class="mdl-textfield__input" type="text" id="subcode">
-    <label class="mdl-textfield__label" for="subcode">Subject Code</label>
+    temp += `<div class="mdl-textfield mdl-js-textfield">    
+    <label for="subcode">Subject Code</label>
+    <input type="text" id="subcode">
   </div>`;
 
     temp += `
     <button type="button" onclick="savesubject();" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
       <i class="material-icons">add</i>
     </button>`;
-    document.getElementById('data3rd').innerHTML = temp;
+    document.getElementById('subjectdata').innerHTML = temp;
 }
 function savesubject() {
     var data = JSON.parse(localStorage.getItem('subjects'));
     if (data == null) {
-        data = [];
+        data = {};
     }
-    data.push([document.getElementById("subname").value, document.getElementById('subcode').value]);
+    if (data[classname] == undefined) {        
+        data[classname] = [[document.getElementById("subname").value, document.getElementById('subcode').value]];        
+    } else {
+        data[classname].push([document.getElementById("subname").value, document.getElementById('subcode').value]);
+    }
     localStorage.setItem('subjects', JSON.stringify(data));
     showtoast(`${document.getElementById("subname").value} added`);
     document.getElementById("subname").value = '';
     document.getElementById("subcode").value = '';
-    document.getElementById("data3rd").innerHTML = '';
+    document.getElementById("subjectdata").innerHTML = '';
+    console.log(localStorage.getItem('subjects'));
 }
+console.log(localStorage.getItem('studentdata'));
 function displaysubjects() {
     subjectcode = subject = null;
-    var data = JSON.parse(localStorage.getItem('subjects'));
+    var data = JSON.parse(localStorage.getItem('subjects'))[classname];
     if (data != null) {
         var temp = '';
         for (i = 0; i < data.length; i++) {
@@ -362,7 +380,7 @@ function displaysubjects() {
     }
     document.getElementById("data").innerHTML = temp;
 }
-displaysubjects();
+
 
 function showtoast(messageshow) {
     var snackbarContainer = document.querySelector('#demo-toast-example');
@@ -381,19 +399,19 @@ var option = "Mark Present";
 function presentorabsent(op) {
     if (op == "Mark Absent") {
         option = "Mark Absent";
-        
-        document.getElementById('mb1').disabled=true;
-        document.getElementById('mb2').disabled=false;
+
+        document.getElementById('mb1').disabled = true;
+        document.getElementById('mb2').disabled = false;
         document.getElementById('mb2').className = "mdl-button mdl-js-button mdl-button--raised";
 
         var temp = totalabsent;
         totalabsent = totalpresent;
         totalpresent = temp;
     } else {
-        option = "Mark Present";        
+        option = "Mark Present";
         document.getElementById('mb1').className = "mdl-button mdl-js-button mdl-button--raised";
-        document.getElementById('mb1').disabled=false;
-        document.getElementById('mb2').disabled=true;
+        document.getElementById('mb1').disabled = false;
+        document.getElementById('mb2').disabled = true;
         var temp = totalabsent;
         totalabsent = totalpresent;
         totalpresent = temp;
@@ -401,3 +419,41 @@ function presentorabsent(op) {
     showtotalpresentabsentchanges();
 }
 
+var classname = '';
+function realtimeupdateclassname(val) {
+    classname = val;
+    console.log(classname)
+}
+function addclass() {
+    var temp = '';
+    temp += `<input type="text" placeholder="Class Name" id="classname" oninput="realtimeupdateclassname(this.value);">`;
+    temp += `<button type="button" onclick="document.getElementById('csvfile').click();"
+    class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+    <i class="material-icons">upload_file</i>
+    <input type="file" id='csvfile' oninput="readcsv(this);" accept=".csv" style="display: none;">
+</button>;
+`;
+    temp += `<button type="button" onclick="addsubjects();"
+class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+Add Subjects
+</button>       `;
+    temp += `
+    <button type="button" onclick="savesubject();" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+      <i class="material-icons">add</i>
+    </button>`;
+    document.getElementById("data3rd").innerHTML = temp;
+}
+displayclasses();
+
+function selectclass(val){
+    classname=val;
+    displaysubjects();
+}
+function displayclasses(){
+    var data=JSON.parse(localStorage.getItem('totalstudents'));
+    var temp='';
+    for(i in data){
+        temp+=`<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="selectclass('${i}');">${i}</button><br><br>`;
+    }
+    document.getElementById('data').innerHTML=temp;
+}

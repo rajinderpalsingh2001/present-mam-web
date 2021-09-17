@@ -65,7 +65,7 @@ mdl-layout--fixed-tabs">
             </div>
 
             <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-                <a href="#home" class="mdl-layout__tab is-active" onclick="displaysubjects();">Home</a>
+                <a href="#home" class="mdl-layout__tab is-active" onclick="displayclasses();">Home</a>
                 <a href="#viewdata" class="mdl-layout__tab" onclick="viewrecentlysaved();">View Students</a>
                 <a href="#settings" id="settingsbtn" class="mdl-layout__tab">Settings</a>
             </div>
@@ -149,12 +149,7 @@ mdl-layout--fixed-tabs">
             </section>
             <section class="mdl-layout__tab-panel" id="settings">
                 <div class="page-content">
-                    <button type="button" onclick="document.getElementById('csvfile').click();"
-                        class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                        <i class="material-icons">upload_file</i>
-                        <input type="file" id='csvfile' oninput="readcsv(this);" accept=".csv" style="display: none;">
-                    </button>
-
+                    
                     <button type="button" onclick="document.getElementById('deletedialog').showModal();"
                         class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
                         <i class="material-icons">delete_forever</i>
@@ -166,16 +161,17 @@ mdl-layout--fixed-tabs">
                     </button>
                     
 
-                    <hr>
-
-                    <button type="button" onclick="addsubjects();"
-                        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                        Add Subjects
-                    </button>
+                    <hr>                                 
+                    <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="addclass();">Add Class</button>
+                    
 
                     <div id="data3rd">
 
                     </div>
+                    <div id="data3rdstudent">
+                        
+                    </div>
+                    <div id="subjectdata"></div>
                 </div>
             </section>
         </main>
